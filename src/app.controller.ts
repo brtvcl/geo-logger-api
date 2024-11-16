@@ -54,13 +54,85 @@ export class AppController {
     return result;
   }
 
-  // @Get('logs')
-  // getLogs(): string {
-  //   return this.appService.getLogs();
-  // }
+  @Post('locations')
+  async postLocations(
+    @Body()
+    body: {
+      lat: number;
+      lon: number;
+    },
+  ) {
+    const area: { id: number; name: string }[] = await this.prisma.$queryRaw`
+      SELECT "id", "name"
+      FROM "Area"
+      WHERE ST_Contains(boundary, ST_SetSRID(ST_Point(${body.lon}, ${body.lat}), 4326))
+      LIMIT 1
+    `;
 
-  // @Post('areas')
-  // postArea(): string {
-  //   return this.appService.postArea();
-  // }
+    const withinArea = area.length > 0;
+
+    if (withinArea) {
+      await this.prisma.$queryRaw`
+        INSERT INTO "Log" 
+        ("id", "userId", "areaId", "location", "createdAt", "updatedAt") VALUES
+        (${crypto.randomUUID()}, 
+        'e19f9c9b-ab95-4e44-9221-82090d920eac',
+        ${area[0].id}, 
+        ST_SetSRID(ST_MakePoint(${body.lon}, ${body.lat}), 4326)::geography,
+        NOW(),
+        NOW());
+      `;
+    }
+
+    return {
+      logged: withinArea,
+      area: withinArea ? area[0] : null,
+    };
+  }
+
+  @Get('logs')
+  async getLogs() {
+    const logs: {
+      id: number;
+      userId: string;
+      areaId: number;
+      location: string;
+    }[] = await this.prisma
+      .$queryRaw`SELECT "id", "userId", "areaId", ST_AsGeoJSON(location) as location FROM "Log"`;
+
+    const allLogs = this.prisma.log.findMany({
+      select: {
+        id: true,
+        user: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        area: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        createdAt: true,
+      },
+    });
+    return allLogs;
+
+    const logsParsed = logs.map((log) => {
+      const location = JSON.parse(log.location).coordinates;
+      return {
+        id: log.id,
+        userId: log.userId,
+        areaId: log.areaId,
+        location: {
+          lat: location[1],
+          lon: location[0],
+        },
+      };
+    });
+
+    return logsParsed;
+  }
 }
