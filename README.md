@@ -2,10 +2,12 @@
 
 Log users location and the area they entered. Create new area with given polygon. Get logs.
 
+<p>
 <img src="https://avatars.githubusercontent.com/u/1759716?s=200&v=4" alt="PostGIS logo" height="60">
 <img src="https://avatars.githubusercontent.com/u/177543?s=200&v=4" alt="Postgres logo" height="60">
 <img src="https://avatars.githubusercontent.com/u/9950313?s=200&v=4" alt="Node.js logo" height="60">
 <img src="https://nestjs.com/img/logo-small.svg" height="60" alt="Nest Logo" />
+</p>
 
 More resources here
 
