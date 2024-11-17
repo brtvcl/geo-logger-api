@@ -19,6 +19,7 @@ model Area {
   id        String                                 @id @default(uuid())
   name      String
   boundary  Unsupported("GEOMETRY(POLYGON, 4326)")
+  envelope  Unsupported("GEOMETRY(POLYGON, 4326)")
   logs      Log[]
   createdAt DateTime                               @default(now())
   updatedAt DateTime                               @updatedAt

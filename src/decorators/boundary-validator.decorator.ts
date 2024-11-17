@@ -28,8 +28,8 @@ export function IsBoundaryValid(validationOptions?: ValidationOptions) {
 
           // Minimum 4 points for a polygon
           if (value.length < 4) return false;
-          // Maximum 1,000 points for a polygon
-          if (value.length > 1000) return false;
+          // Maximum 4,000 points for a polygon
+          if (value.length > 4000) return false;
           const firstPoint = value[0];
           const lastPoint = value[value.length - 1];
           // heck if the boundary forms a closed polygon)
