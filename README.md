@@ -1,6 +1,6 @@
 # 🧭 Geo Logger API
 
-Log users location and the area they entered. Create new area with given polygon. Get logs.
+The Geo Logger API enables logging user locations, identifying entered areas, and creating polygon-defined zones using PostGIS for efficient geospatial queries. Built with NestJS and PostgreSQL, it offers endpoints for managing areas, retrieving logs, and logging locations. Designed for scalability and performance, future enhancements include pagination, advanced queries, and hollow polygon support.
 
 <p>
 <img src="https://avatars.githubusercontent.com/u/1759716?s=200&v=4" alt="PostGIS logo" height="60">
