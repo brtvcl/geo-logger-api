@@ -1,6 +1,6 @@
 import { IsString } from 'class-validator';
 import { Point } from './point.dto';
-import { IsBoundaryValid } from 'src/decorators/boundary-validator.decorator';
+import { IsBoundaryValid } from '../decorators/boundary-validator.decorator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class PostAreaDto {
