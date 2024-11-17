@@ -11,6 +11,9 @@ export class AppService {
     lat: number,
     lon: number,
   ): Promise<{ id: string; name: string }[]> {
+    // Find the area that contains the point
+    // by checking if the point is in the envelope and boundary
+
     return this.prisma.$queryRaw`
       SELECT "id", "name"
       FROM "Area"
@@ -32,6 +35,7 @@ export class AppService {
     lon: number;
     areaId: string;
   }) {
+    // Insert the log into the database
     await this.prisma.$queryRaw`
         INSERT INTO "Log" 
         ("id", "userId", "areaId", "location", "createdAt", "updatedAt") VALUES (
@@ -54,6 +58,7 @@ export class AppService {
   }
 
   async findIntersectingArea(boundary: Array<Point>) {
+    // Find the area that intersects with the polygon
     const polygonText = `POLYGON((${boundary.map((point) => `${point.lon} ${point.lat}`).join(', ')}))`;
 
     const intersectingArea: { id: string; name: string }[] = await this.prisma
@@ -120,8 +125,8 @@ export class AppService {
     };
   }
 
-  async getLogs() {
-    const allLogs = this.prisma.log.findMany({
+  getLogs() {
+    return this.prisma.log.findMany({
       select: {
         id: true,
         user: {
@@ -139,7 +144,6 @@ export class AppService {
         createdAt: true,
       },
     });
-    return allLogs;
   }
 
   async getAreas() {
