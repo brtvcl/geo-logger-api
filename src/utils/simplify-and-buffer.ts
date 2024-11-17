@@ -20,10 +20,6 @@ function simplifyAndBuffer({
   if (currentDepth >= maxDepth) {
     throw new Error('Maximum recursion depth reached. Simplification failed.');
   }
-  console.log({
-    currentDepth: currentDepth,
-    verties: polygon.geometry.coordinates[0].length,
-  });
 
   const simplified = turf.simplify(polygon, { tolerance, highQuality: false });
   const buffered: Feature<Polygon> = turf.buffer(simplified, currentDepth, {
