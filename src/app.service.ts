@@ -14,7 +14,9 @@ export class AppService {
     return this.prisma.$queryRaw`
       SELECT "id", "name"
       FROM "Area"
-      WHERE ST_Contains(boundary, ST_SetSRID(ST_Point(${lon}, ${lat}), 4326))
+      WHERE 
+      ST_Contains("envelope", ST_SetSRID(ST_Point(${lon}, ${lat}), 4326)) AND 
+      ST_Contains("boundary", ST_SetSRID(ST_Point(${lon}, ${lat}), 4326))
       LIMIT 1
     `;
   }
