@@ -9,7 +9,7 @@ export class AppService {
   async findAreaByLatLon(
     lat: number,
     lon: number,
-  ): Promise<{ id: number; name: string }[]> {
+  ): Promise<{ id: string; name: string }[]> {
     return this.prisma.$queryRaw`
       SELECT "id", "name"
       FROM "Area"
@@ -27,7 +27,7 @@ export class AppService {
     userId: string;
     lat: number;
     lon: number;
-    areaId: number;
+    areaId: string;
   }) {
     await this.prisma.$queryRaw`
         INSERT INTO "Log" 
@@ -73,16 +73,20 @@ export class AppService {
   }) {
     const polygonText = `POLYGON((${boundary.map((point) => `${point.lon} ${point.lat}`).join(', ')}))`;
 
-    const result = await this.prisma.$queryRaw`
+    const id = crypto.randomUUID();
+    await this.prisma.$queryRaw`
         INSERT INTO "Area" 
         ("id", "name", "boundary", "updatedAt") VALUES (
-          ${crypto.randomUUID()}, 
+          ${id}, 
           ${name}, 
           ST_GeomFromText(${polygonText}, 4326),
           NOW()
         )`;
 
-    return result;
+    return {
+      id,
+      name,
+    };
   }
 
   async getLogs() {
@@ -108,19 +112,23 @@ export class AppService {
   }
 
   async getAreas() {
-    const areas: { id: number; name: string; boundary: string }[] = await this
+    const areas: { id: string; name: string; boundary: string }[] = await this
       .prisma
       .$queryRaw`SELECT "id", "name", ST_AsGeoJSON("boundary") as "boundary" FROM "Area"`;
 
-    const areasParsed = areas.map((area) => {
+    const areasParsed: {
+      id: string;
+      name: string;
+      boundary: Point[];
+    }[] = areas.map((area) => {
       return {
         id: area.id,
         name: area.name,
         boundary: JSON.parse(area.boundary).coordinates[0].map(
           (point: number[]) => {
             return {
-              lon: point[0],
               lat: point[1],
+              lon: point[0],
             };
           },
         ),
