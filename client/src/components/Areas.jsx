@@ -30,7 +30,9 @@ function Areas() {
   return (
     <div className="flex-1">
       <div className="flex flex-1 w-full">
-        <Button className="ml-auto">Apply</Button>
+        <Button className="ml-auto" onClick={apply}>
+          Apply
+        </Button>
       </div>
       <div className="flex">
         <div className="flex-1">
