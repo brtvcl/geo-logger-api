@@ -21,7 +21,7 @@ More resources here
 1. Node.js installed on your computer
 2. PostGIS enabled Postgres database
 
-You can use docker to quickly spinup an instance of PostGIS with following command
+If you don't have PostGIS you can use docker to quickly spinup an instance of PostGIS with following command
 
 ```
 docker run --env=POSTGRES_PASSWORD=pgadmin -p 5432:5432 postgis/postgis:latest
@@ -39,7 +39,11 @@ docker run --env=POSTGRES_PASSWORD=pgadmin -p 5432:5432 postgis/postgis:latest
 
    .env.example can be used as a template
 
-4. Run the server
+4. Create a database
+
+   `npm run migrate` will automatically create the database and run the migration, create prisma client, add seed data.
+
+5. Run the server
 
    `npm run start` or `npm run start:dev`
 
@@ -60,5 +64,5 @@ npm run seed
 To run tests
 
 ```
-npm run test
+npm run test:e2e
 ```
