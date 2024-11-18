@@ -12,6 +12,8 @@ async function bootstrap() {
     new FastifyAdapter(),
   );
 
+  app.enableCors({ origin: 'http://localhost:5173' });
+
   const config = new DocumentBuilder()
     .setTitle('Geo Logger API')
     .setDescription(
